@@ -1,6 +1,6 @@
 # SelfStream 🤌
 
-A lightweight, self-hosted Stremio addon with **3 configurable sources**, built-in HLS proxy, multi-language support (40 languages), and automatic subtitle injection.
+A lightweight, self-hosted Stremio addon with **2 configurable sources**, built-in HLS proxy, multi-language support (40 languages), and automatic subtitle injection.
 
 > **All sources are disabled by default.** Enable only the ones you need from the configuration page.
 
@@ -10,7 +10,7 @@ A lightweight, self-hosted Stremio addon with **3 configurable sources**, built-
 
 | Feature | Description |
 |---|---|
-| **3 Sources** | **VixSrc** (movies & series), **CinemaCity** (movies & series + subtitles), **AnimeUnity** (anime via Kitsu) |
+| **3 Sources** | **VixSrc** (movies & series), **AnimeUnity** (anime via Kitsu) |
 | **Per-source configuration** | Enable/disable each source independently from the landing page |
 | **40 Languages** | Select preferred audio and subtitle language per source |
 | **HLS Proxy** | All streams are proxied through the addon — bypasses geo/IP restrictions |
@@ -23,7 +23,6 @@ A lightweight, self-hosted Stremio addon with **3 configurable sources**, built-
 
 ### Stream Labels
 - **VixSrc**: `VixSrc 🤌` — `🎬 Localized Title`
-- **CinemaCity**: `CinemaCity 🤌` — `🎬 Localized Title`
 - **AnimeUnity**: `AU 🤌` — `VIX 1080 🤌`
 
 ---
@@ -73,7 +72,7 @@ The addon will be available at `http://your-ip:7020/manifest.json`.
 
 > **Note**: AnimeUnity/VixCloud may not work on HuggingFace due to cloud IP blocking.
 
-### Vercel (Serverless — fast, limited, CinemaCity and AnimeUnity may not work)
+### Vercel (Serverless — fast, limited and AnimeUnity may not work)
 
 [📺 Video Guide](https://www.youtube.com/watch?v=TP3_sbt94Ag)
 
@@ -105,6 +104,5 @@ The addon runs on `http://localhost:7000` by default.
 ## Technical Notes
 
 - **Proxy architecture**: Stream URLs point to `/proxy/hls/manifest.m3u8` which rewrites all segment/audio/subtitle URIs to also go through the proxy, ensuring playback works from any network.
-- **CinemaCity subtitles**: The player JSON exposes a `subtitle` array with up to 90 VTT tracks. These are wrapped into HLS subtitle playlists (`/proxy/hls/subtitle.m3u8` → `/proxy/hls/subtitle.vtt`) with `X-TIMESTAMP-MAP` injection for sync.
 - **AnimeMapping**: Kitsu IDs are converted to AnimeUnity paths via the AnimeMapping API, then resolved through VixCloud.
 - **Header cache fallback**: On serverless platforms where the in-memory cache is empty, the proxy infers the correct headers from the URL pattern (VixSrc, VixCloud, or generic).

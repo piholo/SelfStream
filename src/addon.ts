@@ -1,7 +1,8 @@
 const { addonBuilder } = require('stremio-addon-sdk');
 import { getVixSrcStreams } from './vixsrc';
 import { getVixCloudStreams } from './vixcloud';
-import { getCinemaCityStreams, extractFreshStreamUrl, FreshStream, SubtitleTrack } from './cinemacity';
+// [CinemaCity disabled — Cloudflare bypass no longer viable]
+// import { getCinemaCityStreams, extractFreshStreamUrl, FreshStream, SubtitleTrack } from './cinemacity';
 import { decodeProxyToken, resolveUrl, makeProxyToken, getAddonBase } from './proxy';
 import { decodeConfig, UserConfig, DEFAULT_CONFIG } from './config';
 import { request } from 'undici';
@@ -133,8 +134,7 @@ async function handleStream(type: string, id: string, userConfig: UserConfig): P
                 const TMDB_KEY = Buffer.from('MTg2NWY0M2EwNTQ5Y2E1MGQzNDFkZDlhYjhiMjlmNDk=', 'base64').toString();
                 const tmdbType = type === 'series' ? 'tv' : 'movie';
                 // Pick the best lang between vix and cc (prefer whichever is enabled)
-                const titleLang = userConfig.cinemacityEnabled ? userConfig.cinemacityLang
-                    : userConfig.vixEnabled ? userConfig.vixLang : 'en';
+                const titleLang = userConfig.vixEnabled ? userConfig.vixLang : 'en';
                 if (tmdbId.startsWith('tt')) {
                     const resp = await fetch(`https://api.themoviedb.org/3/find/${tmdbId}?api_key=${TMDB_KEY}&external_source=imdb_id&language=${titleLang}`);
                     const data = await resp.json() as any;
@@ -161,19 +161,19 @@ async function handleStream(type: string, id: string, userConfig: UserConfig): P
                 }
             }
 
-            // ── CinemaCity ──
-            if (userConfig.cinemacityEnabled) {
-                try {
-                    const ccStreams = await getCinemaCityStreams(tmdbId, type, season, episode, userConfig.cinemacityLang);
-                    for (const s of ccStreams) {
-                        s.name = 'CinemaCity 🤌';
-                        s.title = `🎬 ${mediaTitle || 'Stream'}`;
-                    }
-                    allStreams.push(...ccStreams);
-                } catch (err) {
-                    console.error("[CinemaCity] error:", err);
-                }
-            }
+            // ── CinemaCity [DISABLED — Cloudflare bypass no longer viable] ──
+            // if (userConfig.cinemacityEnabled) {
+            //     try {
+            //         const ccStreams = await getCinemaCityStreams(tmdbId, type, season, episode, userConfig.cinemacityLang);
+            //         for (const s of ccStreams) {
+            //             s.name = 'CinemaCity 🤌';
+            //             s.title = `🎬 ${mediaTitle || 'Stream'}`;
+            //         }
+            //         allStreams.push(...ccStreams);
+            //     } catch (err) {
+            //         console.error("[CinemaCity] error:", err);
+            //     }
+            // }
         }
     } catch (err) {
         console.error("Handler error:", err);
@@ -264,7 +264,9 @@ app.get('/stream/:type/:id.json', async (req: any, res: any) => {
     }
 });
 
-// ── CinemaCity Lazy Proxy: resolves fresh CDN URL at playback time ──
+// ── CinemaCity Lazy Proxy [DISABLED — Cloudflare bypass no longer viable] ──
+// Entire /proxy/cc/ endpoint commented out.
+/*
 app.get('/proxy/cc/manifest.m3u8', async (req: any, res: any) => {
     try {
         const token = req.query.token;
@@ -444,6 +446,7 @@ app.get('/proxy/cc/manifest.m3u8', async (req: any, res: any) => {
         res.status(500).send('#EXTM3U\n# Internal error');
     }
 });
+*/
 
 // ── HLS Proxy: Master manifest rewriter (Synthetic FHD logic) ──
 app.get('/proxy/hls/manifest.m3u8', async (req: any, res: any) => {
