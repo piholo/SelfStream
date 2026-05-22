@@ -79,15 +79,9 @@ p.description{font-size:16px;color:var(--text-muted);line-height:1.6;margin-bott
     </div>
 </div>
 
-<div class="source-row enabled" id="cinemacity-row">
-    <div class="source-header">
-        <span class="source-label">🎬 CinemaCity <span class="source-badge">Multi-language</span></span>
-        <label class="toggle"><input type="checkbox" id="cinemacityEnabled" checked onchange="toggleSource('cinemacity')"><span class="toggle-slider"></span></label>
-    </div>
-    <div class="source-options">
-        <select id="cinemacityLang" class="lang-select">` + langOptions + `</select>
-    </div>
-</div>
+<!-- CinemaCity disabled — Cloudflare bypass no longer viable -->
+<input type="hidden" id="cinemacityEnabled" />
+<input type="hidden" id="cinemacityLang" value="en" />
 
 <div class="source-row disabled" id="animeunity-row">
     <div class="source-header">
