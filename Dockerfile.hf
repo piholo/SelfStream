@@ -6,7 +6,7 @@ RUN apk add --no-cache git
 WORKDIR /app
 
 # Clona il repository direttamente nella cartella /app
-RUN git clone https://github.com/piholo/SelfStream .
+RUN git clone https://github.com/Linolu25/SelfStream .
 
 # Installa le dipendenze
 RUN npm install
